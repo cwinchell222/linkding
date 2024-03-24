@@ -308,6 +308,9 @@ class UserProfile(models.Model):
     theme = models.CharField(
         max_length=10, choices=THEME_CHOICES, blank=False, default=THEME_AUTO
     )
+    default_home_link = models.CharField(
+        max_length=20, choices=DEFAULT_HOME_LINK_CHOICES, blank=False, default=DEFAULT_HOME_LINK_NONE
+    )
     bookmark_date_display = models.CharField(
         max_length=10,
         choices=BOOKMARK_DATE_DISPLAY_CHOICES,
@@ -346,6 +349,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = [
             "theme",
+            "default_home_link",
             "bookmark_date_display",
             "bookmark_link_target",
             "web_archive_integration",
