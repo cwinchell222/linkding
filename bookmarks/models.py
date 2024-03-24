@@ -270,6 +270,12 @@ class UserProfile(models.Model):
         (THEME_LIGHT, "Light"),
         (THEME_DARK, "Dark"),
     ]
+    DEFAULT_HOME_LINK_NONE = ""
+    DEFAULT_HOME_LINK_UNREAD = "!unread"
+    DEFAULT_HOME_LINK_CHOICES = [
+        (DEFAULT_HOME_LINK_NONE, ""),
+        (DEFAULT_HOME_LINK_UNREAD, "Unread")
+    ]
     BOOKMARK_DATE_DISPLAY_RELATIVE = "relative"
     BOOKMARK_DATE_DISPLAY_ABSOLUTE = "absolute"
     BOOKMARK_DATE_DISPLAY_HIDDEN = "hidden"
