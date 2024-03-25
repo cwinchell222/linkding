@@ -31,7 +31,7 @@ from bookmarks.services.bookmarks import (
 from bookmarks.utils import get_safe_return_url
 from bookmarks.views.partials import contexts
 
-_default_page_size = 30
+_default_page_size = 31
 
 
 @login_required
