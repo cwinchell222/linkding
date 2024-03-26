@@ -114,7 +114,12 @@
     </div>
   {% endif %}
   <div class="d-flex justify-between">
-    <a href="{% url 'bookmarks:index' %}" class="d-flex align-center"> {# change this line for group issue 1 #}
+    <a {% if request.user_profile.default_home_link == '!unread' %}
+        href="{% url 'bookmarks:index' %}?q=!unread"
+    {% else %}
+        href="{% url 'bookmarks:index' %}"
+    {% endif %}
+       class="d-flex align-center">
       <img class="logo" src="{% static 'logo.png' %}" alt="Application logo">
       <h1>LINKDING</h1>
     </a>
