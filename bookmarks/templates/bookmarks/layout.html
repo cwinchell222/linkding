@@ -114,7 +114,7 @@
     </div>
   {% endif %}
   <div class="d-flex justify-between">
-    <a {% if request.user_profile.default_home_link == '!unread' %}
+    <a {% if request.user_profile.default_home_link == 'unread' %}
         href="{% url 'bookmarks:index' %}?q=!unread"
     {% else %}
         href="{% url 'bookmarks:index' %}"
