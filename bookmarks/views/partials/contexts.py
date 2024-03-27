@@ -94,6 +94,7 @@ class BookmarkListContext:
         self.action_url = self.generate_action_url(
             self.search, self.get_base_action_url(), self.return_url
         )
+        self.home_link = user_profile.default_home_link
         self.link_target = user_profile.bookmark_link_target
         self.date_display = user_profile.bookmark_date_display
         self.description_display = user_profile.bookmark_description_display

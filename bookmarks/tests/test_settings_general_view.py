@@ -23,6 +23,7 @@ class SettingsGeneralViewTestCase(TestCase, BookmarkFactoryMixin):
             overrides = {}
         form_data = {
             "theme": UserProfile.THEME_AUTO,
+            "default_home_link": UserProfile.DEFAULT_HOME_LINK_NONE,
             "bookmark_date_display": UserProfile.BOOKMARK_DATE_DISPLAY_RELATIVE,
             "bookmark_description_display": UserProfile.BOOKMARK_DESCRIPTION_DISPLAY_INLINE,
             "bookmark_description_max_lines": 1,
@@ -57,6 +58,7 @@ class SettingsGeneralViewTestCase(TestCase, BookmarkFactoryMixin):
         form_data = {
             "update_profile": "",
             "theme": UserProfile.THEME_DARK,
+            "default_home_link": UserProfile.DEFAULT_HOME_LINK_UNREAD,
             "bookmark_date_display": UserProfile.BOOKMARK_DATE_DISPLAY_HIDDEN,
             "bookmark_description_display": UserProfile.BOOKMARK_DESCRIPTION_DISPLAY_SEPARATE,
             "bookmark_description_max_lines": 3,
@@ -77,6 +79,7 @@ class SettingsGeneralViewTestCase(TestCase, BookmarkFactoryMixin):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.user.profile.theme, form_data["theme"])
+        self.assertEqual(self.user.profile.default_home_link, form_data["default_home_link"])
         self.assertEqual(
             self.user.profile.bookmark_date_display, form_data["bookmark_date_display"]
         )

@@ -19,8 +19,25 @@ class BookmarkIndexViewTestCase(TestCase, BookmarkFactoryMixin, HtmlTestMixin):
         user = self.get_or_create_test_user()
         self.client.force_login(user)
 
+    def assertDefaultHomeLinkNone(self, response, url):
+        html = response.content.decode()
+        self.assertInHTML(
+            f"""<a href="{url}" class="d-flex align-center">""",
+            html,
+        )
+
+    def assertDefaultHomeLinkUnread(self, response, url):
+        self.user.profile.default_home_link = UserProfile.DEFAULT_HOME_LINK_UNREAD
+        self.user.profile.save()
+
+        html = response.content.decode()
+        self.assertInHTML(
+            f"""<a href="{url}?q=!unread" class="d-flex align-center">""",
+            html,
+        )
+
     def assertVisibleBookmarks(
-        self, response, bookmarks: List[Bookmark], link_target: str = "_blank"
+            self, response, bookmarks: List[Bookmark], link_target: str = "_blank"
     ):
         soup = self.make_soup(response.content.decode())
         bookmark_list = soup.select_one(
@@ -38,7 +55,7 @@ class BookmarkIndexViewTestCase(TestCase, BookmarkFactoryMixin, HtmlTestMixin):
             self.assertIsNotNone(bookmark_item)
 
     def assertInvisibleBookmarks(
-        self, response, bookmarks: List[Bookmark], link_target: str = "_blank"
+            self, response, bookmarks: List[Bookmark], link_target: str = "_blank"
     ):
         soup = self.make_soup(response.content.decode())
 
@@ -207,7 +224,7 @@ class BookmarkIndexViewTestCase(TestCase, BookmarkFactoryMixin, HtmlTestMixin):
         self.assertSelectedTags(response, [tags[0], tags[1]])
 
     def test_should_not_display_search_terms_from_query_as_selected_tags_in_strict_mode(
-        self,
+            self,
     ):
         tags = [
             self.setup_tag(),
