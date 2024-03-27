@@ -25,10 +25,6 @@ jobs:
         run: npm ci
       - name: Setup Python environment
         run: pip install -r requirements.txt -r requirements.dev.txt
-      - name: Database Migrates
-        run: |
-          python manage.py makemigrations --merge
-          python manage.py migrate
       - name: Run tests
         run: python manage.py test bookmarks.tests
   e2e_tests:
@@ -51,10 +47,6 @@ jobs:
         run: |
           pip install -r requirements.txt -r requirements.dev.txt
           playwright install chromium
-      - name: Database Migrates
-        run: |
-          python manage.py makemigrations --merge
-          python manage.py migrate
       - name: Run build
         run: |
           npm run build
