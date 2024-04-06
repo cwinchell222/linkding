@@ -276,6 +276,14 @@ class UserProfile(models.Model):
         (DEFAULT_HOME_LINK_NONE, "All"),
         (DEFAULT_HOME_LINK_UNREAD, "Unread")
     ]
+    BOOKMARK_PER_PAGE_LOW = "15"
+    BOOKMARK_PER_PAGE_MID = "30"
+    BOOKMARK_PER_PAGE_HIGH = "60"
+    BOOKMARK_PER_PAGE_CHOICES = [
+        (BOOKMARK_PER_PAGE_LOW, "15"),
+        (BOOKMARK_PER_PAGE_MID, "30"),
+        (BOOKMARK_PER_PAGE_HIGH, "60")
+    ]
     BOOKMARK_DATE_DISPLAY_RELATIVE = "relative"
     BOOKMARK_DATE_DISPLAY_ABSOLUTE = "absolute"
     BOOKMARK_DATE_DISPLAY_HIDDEN = "hidden"
@@ -316,6 +324,12 @@ class UserProfile(models.Model):
     )
     default_home_link = models.CharField(
         max_length=20, choices=DEFAULT_HOME_LINK_CHOICES, blank=False, default=DEFAULT_HOME_LINK_NONE
+    )
+    bookmark_per_page = models.CharField(
+        max_length=10,
+        choices=BOOKMARK_PER_PAGE_CHOICES,
+        blank=False,
+        default=BOOKMARK_PER_PAGE_MID
     )
     bookmark_date_display = models.CharField(
         max_length=10,
@@ -361,11 +375,13 @@ class UserProfile(models.Model):
 
 
 class UserProfileForm(forms.ModelForm):
+    #Add bookmarks_Per_Page Here as a key
     class Meta:
         model = UserProfile
         fields = [
             "theme",
             "default_home_link",
+            "bookmark_per_page",
             "bookmark_date_display",
             "bookmark_description_display",
             "bookmark_description_max_lines",
