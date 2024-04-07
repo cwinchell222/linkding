@@ -114,8 +114,9 @@
       <input type="submit" value="Save" class="btn btn-primary mr-2">
     {% endif %}
     <a href="{{ cancel_url }}" class="btn">Nevermind</a>
+    <button type="button" id="refreshButton" class="btn">Refresh Bookmark</button>
   </div>
-  <script type="application/javascript">
+    <script type="application/javascript">
     /**
      * - Pre-fill title and description placeholders with metadata from website as soon as URL changes
      * - Show hint if URL is already bookmarked
@@ -132,6 +133,7 @@
       const websiteTitleInput = document.getElementById('{{ form.website_title.id_for_label }}');
       const websiteDescriptionInput = document.getElementById('{{ form.website_description.id_for_label }}');
       const editedBookmarkId = {{ bookmark_id }};
+      const refreshButton = document.getElementById('refreshButton')
 
       function toggleLoadingIcon(input, show) {
         const icon = input.parentNode.querySelector('i.form-icon');
@@ -220,6 +222,7 @@
         checkUrl();
       }
       urlInput.addEventListener('input', checkUrl);
+      refreshButton.addEventListener('click', checkUrl);
 
       // Set initial website title and description for edited bookmarks
       if (editedBookmarkId) {
