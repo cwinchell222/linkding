@@ -125,6 +125,15 @@ def _base_bookmarks_query(
         elif search.sort == BookmarkSearch.SORT_TITLE_DESC:
             query_set = query_set.order_by(order_field).reverse()
 
+    # Sort by website
+    if (
+        search.sort == BookmarkSearch.SORT_WEBSITE_ASC
+        or search.sort == BookmarkSearch.SORT_WEBSITE_DESC
+    ):
+        query_set = query_set.annotate(
+            effective_website=Case()
+        )
+
     return query_set
 
 
