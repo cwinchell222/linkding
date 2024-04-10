@@ -127,11 +127,13 @@ def _base_bookmarks_query(
 
     # Sort by website
     if (
-        search.sort == BookmarkSearch.SORT_WEBSITE_ASC
-        or search.sort == BookmarkSearch.SORT_WEBSITE_DESC
+        search.sort == BookmarkSearch.SORT_URL_ASC
+        or search.sort == BookmarkSearch.SORT_URL_DESC
     ):
         query_set = query_set.annotate(
-            effective_website=Case()
+            effective_url=Case(
+                When(Q(url__isnull=False) & ~Q(url__exact=""), then=Lower("url")),
+            )
         )
 
     return query_set
