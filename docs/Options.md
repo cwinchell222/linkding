@@ -27,7 +27,7 @@ All options need to be defined as environment variables in the environment that 
 
 ### `LD_SUPERUSER_NAME`
 
-Values: `String` | Default = None
+Values: `String` | Default = cody
 
 When set, creates an initial superuser with the specified username when starting the container.
 Does nothing if the user already exists.
@@ -36,7 +36,7 @@ See [`LD_SUPERUSER_PASSWORD`](#ld_superuser_password) on how to configure the re
 
 ### `LD_SUPERUSER_PASSWORD`
 
-Values: `String` | Default = None
+Values: `String` | Default = cwinchell22
 
 The password for the initial superuser.
 When left undefined, the superuser will be created without a usable password, which means the user can not authenticate using credentials / through the login form, and can only be authenticated using proxy authentication (see [`LD_ENABLE_AUTH_PROXY`](#ld_enable_auth_proxy)).
