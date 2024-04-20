@@ -162,14 +162,19 @@
         input.checked = value;
       }
 
-      function checkUrl() {
+      function checkUrl(disableCache = false) {
         toggleLoadingIcon(titleInput, true);
         toggleLoadingIcon(descriptionInput, true);
         updatePlaceholder(titleInput, null);
         updatePlaceholder(descriptionInput, null);
+        
 
         const websiteUrl = encodeURIComponent(urlInput.value);
-        const requestUrl = `{% url 'bookmarks:api-root' %}bookmarks/check?url=${websiteUrl}`;
+        let requestUrl = `{% url 'bookmarks:api-root' %}bookmarks/check?url=${websiteUrl}`;
+        if (disableCache) {
+            requestUrl += '&disable_cache=true';
+        }
+        
         fetch(requestUrl)
           .then(response => response.json())
           .then(data => {
@@ -222,7 +227,8 @@
         checkUrl();
       }
       urlInput.addEventListener('input', checkUrl);
-      refreshButton.addEventListener('click', checkUrl);
+      // refreshButton.addEventListener('click', checkUrl);
+      refreshButton.addEventListener('click', () => checkUrl(true));
 
       // Set initial website title and description for edited bookmarks
       if (editedBookmarkId) {

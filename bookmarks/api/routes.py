@@ -91,18 +91,23 @@ class BookmarkViewSet(
     @action(methods=["get"], detail=False)
     def check(self, request):
         url = request.GET.get("url")
-        bookmark = Bookmark.objects.filter(owner=request.user, url=url).first()
-        existing_bookmark_data = (
-            self.get_serializer(bookmark).data if bookmark else None
-        )
-
-        # Either return metadata from existing bookmark, or scrape from URL
-        if bookmark:
-            metadata = WebsiteMetadata(
-                url, bookmark.website_title, bookmark.website_description
-            )
+        disable_cache = request.GET.get("disable_cache") == "true"
+        if disable_cache:
+            existing_bookmark_data = None
+            metadata = website_loader.load_website_metadata(url, use_cache=False)
         else:
-            metadata = website_loader.load_website_metadata(url)
+            bookmark = Bookmark.objects.filter(owner=request.user, url=url).first()
+            existing_bookmark_data = (
+                self.get_serializer(bookmark).data if bookmark else None
+            )
+
+            # Either return metadata from existing bookmark, or scrape from URL
+            if bookmark:
+                metadata = WebsiteMetadata(
+                    url, bookmark.website_title, bookmark.website_description
+                )
+            else:
+                metadata = website_loader.load_website_metadata(url)
 
         return Response(
             {"bookmark": existing_bookmark_data, "metadata": metadata.to_dict()},

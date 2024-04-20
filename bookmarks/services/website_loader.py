@@ -24,10 +24,22 @@ class WebsiteMetadata:
         }
 
 
+def load_website_metadata(url: str, use_cache: bool = True):
+    match use_cache:
+        case True:
+            return load_website_metadata_with_cache(url)
+        case False:
+            return load_website_metadata_raw(url)
+
+
 # Caching metadata avoids scraping again when saving bookmarks, in case the
 # metadata was already scraped to show preview values in the bookmark form
 @lru_cache(maxsize=10)
-def load_website_metadata(url: str):
+def load_website_metadata_with_cache(url: str):
+    return load_website_metadata_raw(url)
+
+
+def load_website_metadata_raw(url: str):
     title = None
     description = None
     try:
