@@ -168,7 +168,6 @@
         updatePlaceholder(titleInput, null);
         updatePlaceholder(descriptionInput, null);
         
-
         const websiteUrl = encodeURIComponent(urlInput.value);
         let requestUrl = `{% url 'bookmarks:api-root' %}bookmarks/check?url=${websiteUrl}`;
         if (disableCache) {
@@ -204,6 +203,9 @@
             } else {
               bookmarkExistsHint.style['display'] = 'none';
             }
+              if (disableCache) {
+                  websiteTitleInput.value = titleInput.placeholder;
+              }
           });
       }
 
