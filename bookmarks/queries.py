@@ -9,6 +9,8 @@ from django.db.models.functions import Lower
 from bookmarks.models import Bookmark, BookmarkSearch, Tag, UserProfile
 from bookmarks.utils import unique
 
+from tld import get_fld
+
 
 def query_bookmarks(
     user: User, profile: UserProfile, search: BookmarkSearch
@@ -132,9 +134,23 @@ def _base_bookmarks_query(
     ):
         query_set = query_set.annotate(
             effective_url=Case(
-                When(Q(url__isnull=False) & ~Q(url__exact=""), then=Lower("url")),
+                When(Q(url__isnull=False) & ~Q(url__exact=""), then=Lower("url")),  # get_fld()?
+                output_field=CharField(),
             )
         )
+
+        # Determine the field to order by
+        if settings.USE_SQLITE and settings.USE_SQLITE_ICU_EXTENSION:
+            order_field = RawSQL("effective_title COLLATE ICU", ())
+        else:
+            order_field = "effective_url"
+
+        # Sort in ascending order
+        if search.sort == BookmarkSearch.SORT_URL_ASC:
+            query_set = query_set.order_by(order_field)
+        # Sort in descending order
+        elif search.sort == BookmarkSearch.SORT_URL_DESC:
+            query_set = query_set.order_by(order_field).reverse()
 
     return query_set
 
