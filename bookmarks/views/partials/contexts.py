@@ -16,8 +16,8 @@ from bookmarks.models import (
     UserProfile,
     Tag,
 )
-
-DEFAULT_PAGE_SIZE = 30
+# Need to change this to work, error with int type
+DEFAULT_PAGE_SIZE = 30 #UserProfile.bookmark_per_page
 CJK_RE = re.compile(r"[\u4e00-\u9fff]+")
 
 
@@ -68,6 +68,7 @@ class BookmarkListContext:
     def __init__(self, request: WSGIRequest) -> None:
         user = request.user
         user_profile = request.user_profile
+        page_size = int(user_profile.bookmark_per_page)
 
         self.request = request
         self.search = BookmarkSearch.from_request(
@@ -76,7 +77,7 @@ class BookmarkListContext:
 
         query_set = self.get_bookmark_query_set()
         page_number = request.GET.get("page")
-        paginator = Paginator(query_set, DEFAULT_PAGE_SIZE)
+        paginator = Paginator(query_set, page_size)
         bookmarks_page = paginator.get_page(page_number)
         # Prefetch related objects, this avoids n+1 queries when accessing fields in templates
         models.prefetch_related_objects(bookmarks_page.object_list, "owner", "tags")
