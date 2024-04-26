@@ -226,9 +226,9 @@
       // Fetch initial website data if we have a URL, and we are not editing an existing bookmark
       // For existing bookmarks we get the website metadata through hidden inputs
       if (urlInput.value && !editedBookmarkId) {
-        checkUrl();
+        checkUrl(false);
       }
-      urlInput.addEventListener('input', checkUrl);
+      urlInput.addEventListener('input', () => checkUrl(false));
       // refreshButton.addEventListener('click', checkUrl);
       refreshButton.addEventListener('click', () => checkUrl(true));
 
