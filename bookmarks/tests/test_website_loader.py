@@ -95,46 +95,62 @@ class WebsiteLoaderTestCase(TestCase):
             # verify that byte after head was removed, content parsed as utf-8
             self.assertEqual(content, "<head>人</head>")
 
-    def test_load_website_metadata_with_cache(self):
+    def test_load_website_metadata(self):
         with mock.patch(
             "bookmarks.services.website_loader.load_page"
         ) as mock_load_page:
             mock_load_page.return_value = self.render_html_document(
                 "test title", "test description"
             )
-            metadata = website_loader.load_website_metadata_with_cache("https://example.com")
+            metadata = website_loader.load_website_metadata("https://example.com")
             self.assertEqual("test title", metadata.title)
             self.assertEqual("test description", metadata.description)
 
-    def test_load_website_metadata_with_cache_trims_title_and_description(self):
+    def test_load_website_metadata_trims_title_and_description(self):
         with mock.patch(
             "bookmarks.services.website_loader.load_page"
         ) as mock_load_page:
             mock_load_page.return_value = self.render_html_document(
                 "  test title  ", "  test description  "
             )
-            metadata = website_loader.load_website_metadata_with_cache("https://example.com")
+            metadata = website_loader.load_website_metadata("https://example.com")
             self.assertEqual("test title", metadata.title)
             self.assertEqual("test description", metadata.description)
 
-    def test_load_website_metadata_with_cache_using_og_description(self):
+    def test_load_website_metadata_using_og_description(self):
         with mock.patch(
             "bookmarks.services.website_loader.load_page"
         ) as mock_load_page:
             mock_load_page.return_value = self.render_html_document(
                 "test title", "", og_description="test og description"
             )
-            metadata = website_loader.load_website_metadata_with_cache("https://example.com")
+            metadata = website_loader.load_website_metadata("https://example.com")
             self.assertEqual("test title", metadata.title)
             self.assertEqual("test og description", metadata.description)
 
-    def test_load_website_metadata_with_cache_prefers_description_over_og_description(self):
+    def test_load_website_metadata_prefers_description_over_og_description(self):
         with mock.patch(
             "bookmarks.services.website_loader.load_page"
         ) as mock_load_page:
             mock_load_page.return_value = self.render_html_document(
                 "test title", "test description", og_description="test og description"
             )
-            metadata = website_loader.load_website_metadata_with_cache("https://example.com")
+            metadata = website_loader.load_website_metadata("https://example.com")
             self.assertEqual("test title", metadata.title)
             self.assertEqual("test description", metadata.description)
+
+    def test_load_website_metadata_title_change(self):
+        with mock.patch(
+                "bookmarks.services.website_loader.load_page"
+        ) as mock_load_page:
+            mock_load_page.return_value = self.render_html_document("test title")
+            metadata = website_loader.load_website_metadata("https://example.com")
+            self.assertEqual("test title", metadata.title)
+
+            mock_load_page.return_value = self.render_html_document("changed title")
+
+            metadata = website_loader.load_website_metadata("https://example.com")
+            self.assertEqual("test title", metadata.title)
+            metadata = website_loader.load_website_metadata("https://example.com", use_cache=False)
+            self.assertEqual("changed title", metadata.title)
+
