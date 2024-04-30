@@ -9,8 +9,6 @@ from django.db.models.functions import Lower
 from bookmarks.models import Bookmark, BookmarkSearch, Tag, UserProfile
 from bookmarks.utils import unique
 
-from tld import get_fld
-
 
 def query_bookmarks(
     user: User, profile: UserProfile, search: BookmarkSearch
@@ -134,7 +132,7 @@ def _base_bookmarks_query(
     ):
         query_set = query_set.annotate(
             effective_url=Case(
-                When(Q(url__isnull=False) & ~Q(url__exact=""), then=Lower("url")),  # get_fld()?
+                When(Q(url__isnull=False) & ~Q(url__exact=""), then=Lower("url")),
                 output_field=CharField(),
             )
         )
