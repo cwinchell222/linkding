@@ -59,6 +59,7 @@ class SettingsGeneralViewTestCase(TestCase, BookmarkFactoryMixin):
             "update_profile": "",
             "theme": UserProfile.THEME_DARK,
             "default_home_link": UserProfile.DEFAULT_HOME_LINK_UNREAD,
+            "bookmark_per_page": UserProfile.BOOKMARK_PER_PAGE_LOW,
             "bookmark_date_display": UserProfile.BOOKMARK_DATE_DISPLAY_HIDDEN,
             "bookmark_description_display": UserProfile.BOOKMARK_DESCRIPTION_DISPLAY_SEPARATE,
             "bookmark_description_max_lines": 3,
@@ -146,6 +147,7 @@ class SettingsGeneralViewTestCase(TestCase, BookmarkFactoryMixin):
                 {
                     "update_profile": "",
                     "enable_favicons": True,
+                    "bookmark_per_page": UserProfile.BOOKMARK_PER_PAGE_LOW,
                 }
             )
             self.client.post(reverse("bookmarks:settings.general"), form_data)
