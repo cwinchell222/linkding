@@ -125,6 +125,31 @@ def _base_bookmarks_query(
         elif search.sort == BookmarkSearch.SORT_TITLE_DESC:
             query_set = query_set.order_by(order_field).reverse()
 
+    # Sort by website
+    if (
+        search.sort == BookmarkSearch.SORT_URL_ASC
+        or search.sort == BookmarkSearch.SORT_URL_DESC
+    ):
+        query_set = query_set.annotate(
+            effective_url=Case(
+                When(Q(url__isnull=False) & ~Q(url__exact=""), then=Lower("url")),
+                output_field=CharField(),
+            )
+        )
+
+        # Determine the field to order by
+        if settings.USE_SQLITE and settings.USE_SQLITE_ICU_EXTENSION:
+            order_field = RawSQL("effective_title COLLATE ICU", ())
+        else:
+            order_field = "effective_url"
+
+        # Sort in ascending order
+        if search.sort == BookmarkSearch.SORT_URL_ASC:
+            query_set = query_set.order_by(order_field)
+        # Sort in descending order
+        elif search.sort == BookmarkSearch.SORT_URL_DESC:
+            query_set = query_set.order_by(order_field).reverse()
+
     return query_set
 
 
