@@ -43,7 +43,8 @@ def parse_tag_string(tag_string: str, delimiter: str = ","):
 
 
 def build_tag_string(tag_names: List[str], delimiter: str = ","):
-    return delimiter.join(tag_names)
+    sorted_tag_names = sorted(tag_names)
+    return delimiter.join(sorted_tag_names)
 
 
 class Bookmark(models.Model):

@@ -8,7 +8,7 @@ from django.db.models import Count, QuerySet
 from django.utils.translation import ngettext, gettext
 from rest_framework.authtoken.admin import TokenAdmin
 from rest_framework.authtoken.models import TokenProxy
-
+from django.db.models.functions import Lower
 from bookmarks.models import Bookmark, Tag, UserProfile, Toast, FeedToken
 from bookmarks.services.bookmarks import archive_bookmark, unarchive_bookmark
 
@@ -129,7 +129,7 @@ class AdminTag(admin.ModelAdmin):
     list_display = ("name", "bookmarks_count", "owner", "date_added")
     search_fields = ("name", "owner__username")
     list_filter = ("owner__username",)
-    ordering = ("-date_added",)
+    ordering =(Lower("name"),)
     actions = ["delete_unused_tags"]
 
     def get_queryset(self, request):
